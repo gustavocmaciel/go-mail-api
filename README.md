@@ -1,6 +1,6 @@
 # Go Mail API
 
-An extremely small REST API  written in Go that *simulates* a **simple** mail backend.
+An extremely small REST API  written in Go that *simulates* a simple mail backend.
 
 Built with [Gorilla Mux](https://github.com/gorilla/mux), a powerful HTTP request router and dispatcher for Go.
 
@@ -28,7 +28,7 @@ git clone https://github.com/gustavocmaciel/mail-api.git
 
 ## Usage
 
-Fell free explore the code and use it for educational purposes. You also experiment and build upon it as needed.
+Fell free explore the code and use it for educational purposes. You can also experiment and build upon it as needed.
 
 ### Note
 
