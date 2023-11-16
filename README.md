@@ -10,7 +10,7 @@ Built with [Gorilla Mux](https://github.com/gorilla/mux), a powerful HTTP reques
 To get a local copy up and running, you can clone this repository using the following command:
 
 ```bash
-git clone https://github.com/gustavocmaciel/mail-api.git
+git clone https://github.com/gustavocmaciel/go-mail-api.git
 ```
 
  Once you have cloned the repository, you can run the project using the go run command:
