@@ -1,6 +1,6 @@
 # Go Mail API
 
-An extremely small REST API  written in Go that *simulates* a simple mail backend.
+A small REST API  written in Go that *simulates* a simple mail backend.
 
 Built with [Gorilla Mux](https://github.com/gorilla/mux), a powerful HTTP request router and dispatcher for Go.
 
