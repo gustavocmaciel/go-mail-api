@@ -6,7 +6,7 @@ import (
 	"slices"
 
 	"github.com/gorilla/mux"
-	"github.com/gustavocmaciel/go-mail-api/pkg/mocks"
+	"github.com/gustavocmaciel/go-mail-api/internal/mocks"
 )
 
 func GetAllMails(w http.ResponseWriter, r *http.Request) {

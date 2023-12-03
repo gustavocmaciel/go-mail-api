@@ -1,6 +1,6 @@
 package mocks
 
-import "github.com/gustavocmaciel/go-mail-api/pkg/models"
+import "github.com/gustavocmaciel/go-mail-api/internal/models"
 
 var Users = []models.User{
 	{

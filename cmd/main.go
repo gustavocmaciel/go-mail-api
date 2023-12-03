@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/gustavocmaciel/go-mail-api/pkg/handlers"
+	"github.com/gustavocmaciel/go-mail-api/internal/handlers"
 )
 
 func main() {

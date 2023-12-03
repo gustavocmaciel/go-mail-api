@@ -3,7 +3,7 @@ package mocks
 import (
 	"time"
 
-	"github.com/gustavocmaciel/go-mail-api/pkg/models"
+	"github.com/gustavocmaciel/go-mail-api/internal/models"
 )
 
 var Mails = []models.Mail{

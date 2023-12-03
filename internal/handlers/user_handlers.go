@@ -5,8 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/gustavocmaciel/go-mail-api/pkg/mocks"
-	"github.com/gustavocmaciel/go-mail-api/pkg/models"
+	"github.com/gustavocmaciel/go-mail-api/internal/mocks"
+	"github.com/gustavocmaciel/go-mail-api/internal/models"
 )
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
