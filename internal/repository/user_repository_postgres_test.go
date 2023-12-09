@@ -15,8 +15,11 @@ func TestCreateUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating mock database: %v", err)
 	}
+
 	defer db.Close()
+
 	repo := NewUserRepositoryPostgres(db)
+
 	// Test Case 1: Successful insertion
 	user := &models.User{
 		ID:        uuid.New(),
@@ -31,6 +34,7 @@ func TestCreateUser(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
+
 	// Test Case 2: Database error during insertion
 	mock.ExpectExec("INSERT INTO users").
 		WithArgs(user.ID, user.Email, user.FirstName, user.LastName).
@@ -50,8 +54,11 @@ func TestGetAllUsers(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating mock database: %v", err)
 	}
+
 	defer db.Close()
+
 	repo := NewUserRepositoryPostgres(db)
+
 	// Test Case 1: Successful retrieval
 	rows := sqlmock.NewRows([]string{"id", "email", "first_name", "last_name"}).
 		AddRow(uuid.New(), "test1@example.com", "John", "Doe").
@@ -65,6 +72,7 @@ func TestGetAllUsers(t *testing.T) {
 	if len(users) != 2 {
 		t.Errorf("Expected 2 users, but got %d", len(users))
 	}
+
 	// Test Case 2: Database error during retrieval
 	mock.ExpectQuery("SELECT id, email, first_name, last_name FROM users").
 		WillReturnError(errors.New("database error"))

@@ -43,7 +43,9 @@ func (r *UserRepositoryPostgres) GetAllUsers() ([]*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer rows.Close()
+
 	var users []*models.User
 	for rows.Next() {
 		var user models.User
