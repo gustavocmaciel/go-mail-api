@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/google/uuid"
 	"github.com/gustavocmaciel/go-mail-api/internal/models"
 	"github.com/lib/pq"
 )
@@ -32,7 +31,6 @@ func NewMailRepositoryPostgres(db *sql.DB) *MailRepositoryPostgres {
 // Returns:
 //   - An error if the operation fails.
 func (r *MailRepositoryPostgres) Create(mail *models.Mail) error {
-
 	recipientArray := pq.Array(mail.Recipients) // Use pq.Array here
 	_, err := r.DB.Exec(`
 		INSERT INTO emails (id, sender, recipients, subject, body, timestamp, email_read, archived)
@@ -45,7 +43,7 @@ func (r *MailRepositoryPostgres) Create(mail *models.Mail) error {
 	return nil
 }
 
-func (r *MailRepositoryPostgres) GetMail(mailID uuid.UUID) (*models.Mail, error) {
+func (r *MailRepositoryPostgres) GetMail(mailID string) (*models.Mail, error) {
 	var mail models.Mail
 	var recipients pq.StringArray // Use pq.StringArray for PostgreSQL array of strings
 
@@ -69,16 +67,28 @@ func (r *MailRepositoryPostgres) GetMail(mailID uuid.UUID) (*models.Mail, error)
 }
 
 func (r *MailRepositoryPostgres) Mailbox(user, mailboxName string) ([]*models.Mail, error) {
-	var mails []*models.Mail
+	var query string
+	if mailboxName == "inbox" {
+		query = `
+			SELECT id, sender, recipients, subject, body, timestamp, email_read, archived
+			FROM emails
+			WHERE $1 = ANY(recipients);
+		`
+	} else if mailboxName == "sent" {
+		query = `
+			SELECT id, sender, recipients, subject, body, timestamp, email_read, archived
+			FROM emails
+			WHERE sender = $1;
+		`
+	} else if mailboxName == "archived" {
+		query = `
+			SELECT id, sender, recipients, subject, body, timestamp, email_read, archived
+			FROM emails
+			WHERE $1 = ANY(recipients) AND archived = true;
+		`
+	}
 
-	// Use pq.StringArray for PostgreSQL array syntax
-	userArray := pq.StringArray([]string{user})
-
-	rows, err := r.DB.Query(`
-		SELECT id, sender, recipients, subject, body, timestamp, email_read, archived
-		FROM emails
-		WHERE $1 = ANY(recipients) AND mailbox = $2;
-    `, userArray, mailboxName)
+	rows, err := r.DB.Query(query, user)
 
 	if err != nil {
 		return nil, err
@@ -86,6 +96,7 @@ func (r *MailRepositoryPostgres) Mailbox(user, mailboxName string) ([]*models.Ma
 
 	defer rows.Close()
 
+	var mails []*models.Mail
 	for rows.Next() {
 		var mail models.Mail
 		var recipients pq.StringArray
