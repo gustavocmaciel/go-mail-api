@@ -2,41 +2,65 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
+	"log"
 	"net/http"
 
-	"github.com/gustavocmaciel/go-mail-api/internal/mocks"
-	"github.com/gustavocmaciel/go-mail-api/internal/models"
+	"github.com/gustavocmaciel/go-mail-api/internal/usecase"
 )
 
-func GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(mocks.Users)
+type UserHandlers struct {
+	CreateUserUseCase *usecase.CreateUserUseCase
+	GetUsersUseCase   *usecase.GetUsersUseCase
 }
 
-func AddUser(w http.ResponseWriter, r *http.Request) {
-	// Read request body
-	defer r.Body.Close()
-	body, err := io.ReadAll(r.Body)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Error reading request body"))
-		return
+func NewUserHandlers(createUserUseCase *usecase.CreateUserUseCase, getUsersUseCase *usecase.GetUsersUseCase) *UserHandlers {
+	return &UserHandlers{
+		CreateUserUseCase: createUserUseCase,
+		GetUsersUseCase:   getUsersUseCase,
 	}
+}
 
-	// Unmarshal JSON data
-	var newUser models.User
-	if err := json.Unmarshal(body, &newUser); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+func (u *UserHandlers) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Handling CreateUser request...")
+
+	var input usecase.CreateUserInputDto
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		log.Printf("Error decoding JSON in CreateUserHandler: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Invalid JSON data"))
 		return
 	}
 
-	// Add the new user to the users slice
-	mocks.Users = append(mocks.Users, newUser)
+	log.Printf("Received CreateUser request: %+v", input)
 
+	output, err := u.CreateUserUseCase.Execute(input)
+	if err != nil {
+		log.Printf("Error executing CreateUserUseCase: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("CreateUser request processed successfully.")
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("User added successfully"))
+	json.NewEncoder(w).Encode(output)
+}
+
+func (u *UserHandlers) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Handling GetUsers request...")
+
+	output, err := u.GetUsersUseCase.Execute()
+	if err != nil {
+		log.Printf("Error executing GetUsersUseCase: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("GetUsers request processed successfully.")
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(output)
 }
