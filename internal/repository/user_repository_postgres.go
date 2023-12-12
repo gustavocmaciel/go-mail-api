@@ -12,25 +12,13 @@ type UserRepositoryPostgres struct {
 }
 
 // NewUserRepositoryPostgres creates a new UserRepositoryPostgres instance.
-//
-// Parameters:
-//   - db: A pointer to a *sql.DB representing the PostgreSQL database connection.
-//
-// Returns:
-//   - A pointer to the newly created UserRepositoryPostgres instance.
 func NewUserRepositoryPostgres(db *sql.DB) *UserRepositoryPostgres {
 	return &UserRepositoryPostgres{DB: db}
 }
 
 // Create inserts a new user into the PostgreSQL database.
-//
-// Parameters:
-//   - user: A pointer to a User struct representing the user to be inserted.
-//
-// Returns:
-//   - An error if the operation fails.
 func (r *UserRepositoryPostgres) Create(user *models.User) error {
-	_, err := r.DB.Exec("INSERT INTO users (id, email, firstName, lastName) VALUES ($1, $2, $3, $4)",
+	_, err := r.DB.Exec("INSERT INTO users (id, email, first_name, last_name) VALUES ($1, $2, $3, $4)",
 		user.ID, user.Email, user.FirstName, user.LastName)
 	if err != nil {
 		return err
@@ -38,6 +26,7 @@ func (r *UserRepositoryPostgres) Create(user *models.User) error {
 	return nil
 }
 
+// GetAllUsers retrieves all users from the  database.
 func (r *UserRepositoryPostgres) GetAllUsers() ([]*models.User, error) {
 	rows, err := r.DB.Query("SELECT id, email, first_name, last_name FROM users")
 	if err != nil {
