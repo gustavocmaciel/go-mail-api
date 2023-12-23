@@ -3,8 +3,6 @@ package models
 import (
 	"reflect"
 	"testing"
-
-	"github.com/google/uuid"
 )
 
 // MockUserRepository is a mock implementation of UserRepository for testing purposes.
@@ -59,7 +57,7 @@ func TestNewUser(t *testing.T) {
 	// Create a new user
 	user := NewUser("test@example.com", "John", "Doe")
 	// Assert that the ID is not the zero value (indicating it was generated)
-	if user.ID == uuid.Nil {
+	if user.ID == "" {
 		t.Errorf("NewUser did not generate a valid UUID for the user's ID.")
 	}
 	// Assert that the other fields are set correctly
