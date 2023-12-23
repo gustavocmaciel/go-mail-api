@@ -3,7 +3,6 @@ module github.com/gustavocmaciel/go-mail-api
 go 1.21.3
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/google/uuid v1.4.0
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.9
