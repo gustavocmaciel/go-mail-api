@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: maildatabase
+    ports:
+      - "5432:5432"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./postgres_data:/var/lib/postgresql/data
+  
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
