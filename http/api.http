@@ -1,0 +1,38 @@
+### Index route
+GET http://localhost:8080/ HTTP/1.1
+Accept: application/json
+
+### Get users
+GET http://localhost:8080/get_users HTTP/1.1
+Accept: application/json
+
+### Add user 
+POST http://localhost:8080/create_user HTTP/1.1
+Accept: application/json
+
+{
+  "email": "user4@example.com",
+  "firstName": "Test",
+  "lastName": "User"
+}
+
+### Get user mailbox
+GET http://localhost:8080/mailbox/user2@example.com/sent HTTP/1.1
+Accept: application/json
+
+### Get mail
+GET http://localhost:8080/get_mail/c7e1106a-1f4e-4c23-b1b6-f21cb0f068ec HTTP/1.1
+Accept: application/json
+
+### Add mail 
+POST http://localhost:8080/create_mail HTTP/1.1
+Host: localhost:8080
+Accept: application/json
+Content-Type: application/json
+
+{
+  "sender": "user4@example.com",
+  "recipients": ["user2@example.com", "user3@example.com"],
+  "subject": "Test Email",
+  "body": "This is a test email body."
+}
