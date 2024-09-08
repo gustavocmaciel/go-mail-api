@@ -56,8 +56,10 @@ func main() {
 	log.Println("HTTP server and routes set up successfully.")
 
 	// Start the HTTP server
-	log.Println("Starting the API server on :8080...")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	log.Println("Starting the API server on :80...")
+	//log.Println("Starting the API server on :8080...")
+	//if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe(":80", router); err != nil {
 		log.Fatalf("Error starting the API server: %v", err)
 	}
 }
