@@ -2,7 +2,7 @@ version: '3'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16-alpine
     container_name: postgres
     environment:
       POSTGRES_USER: admin
@@ -13,12 +13,18 @@ services:
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
     volumes:
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d
       - ./postgres_data:/var/lib/postgresql/data
   
   app:
     build: .
     ports:
-      - 8080:8080
+      - 8080:80
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: maildatabase
+      POSTGRES_HOST: host.docker.internal
+      POSTGRES_PORT: 5432
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
