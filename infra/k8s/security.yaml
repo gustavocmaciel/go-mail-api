@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: go-mail-api
+  namespace: go-mail-api-namespace
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: go-mail-api-read
+  namespace: go-mail-api-namespace
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"] 
+  resources: ["deployments"]
+  verbs: ["get", "watch", "list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: go-mail-api-read-bind
+  namespace: go-mail-api-namespace
+subjects:
+- kind: ServiceAccount
+  name: go-mail-api
+  namespace: go-mail-api-namespace
+roleRef:
+  kind: Role
+  name: go-mail-api-read
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-read
+  namespace: postgres-namespace
+
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"] 
+  resources: ["deployments"]
+  verbs: ["get", "watch", "list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: postgres-read
+  namespace: postgres-namespace
+subjects:
+- kind: ServiceAccount
+  name: postgres
+  namespace: postgres-namespace
+roleRef:
+  kind: Role
+  name: postgres-read
+  apiGroup: rbac.authorization.k8s.io

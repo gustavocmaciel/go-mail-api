@@ -35,8 +35,15 @@ func (r *MailRepositoryPostgres) Create(mail *models.Mail) error {
 	_, err := r.DB.Exec(`
 		INSERT INTO emails (id, sender, recipients, subject, body, timestamp, email_read, archived)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-		mail.ID, mail.Sender, recipientArray,
-		mail.Subject, mail.Body, mail.Timestamp, mail.Read, mail.Archived)
+		mail.ID,
+		mail.Sender,
+		recipientArray,
+		mail.Subject,
+		mail.Body,
+		mail.Timestamp,
+		mail.Read,
+		mail.Archived,
+	)
 	if err != nil {
 		return err
 	}
@@ -55,7 +62,6 @@ func (r *MailRepositoryPostgres) GetMail(mailID string) (*models.Mail, error) {
 		&mail.ID, &mail.Sender, &recipients,
 		&mail.Subject, &mail.Body, &mail.Timestamp, &mail.Read, &mail.Archived,
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +95,6 @@ func (r *MailRepositoryPostgres) Mailbox(user, mailboxName string) ([]*models.Ma
 	}
 
 	rows, err := r.DB.Query(query, user)
-
 	if err != nil {
 		return nil, err
 	}

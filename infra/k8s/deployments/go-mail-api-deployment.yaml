@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-mail-api
+  namespace: go-mail-api-namespace
+  labels:
+    name: go-mail-api
+spec:
+  selector:
+    matchLabels:
+      app: go-mail-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: go-mail-api
+    spec:
+      initContainers:
+      - name: check-db-ready
+        image: postgres:16-alpine
+        # TODO: Should be variable
+        command: ['sh', '-c', 
+          'until pg_isready -h postgres-headless.postgres-namespace.svc.cluster.local -p 5432;
+          do echo waiting for database; sleep 2; done;']
+      containers:
+      - name: go-mail-api
+        image:  go-mail-api-app:latest # dev
+        imagePullPolicy: Never # dev
+        envFrom:
+        - configMapRef:
+            name: postgres-configuration
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "0.05"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80 # The port the container listens on 
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-mail-api-service
+  namespace: go-mail-api-namespace
+spec:
+  selector:
+    app: go-mail-api
+  ports:
+  - port: 80          # The port exposed by the Service
+    targetPort: 80    # The port on the container the Service forwards to
+  type: ClusterIP     # Default type, exposes the Service on a cluster-internal IP

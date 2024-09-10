@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-configuration
+  namespace: postgres-namespace
+  labels:
+    app: postgres
+data:
+  POSTGRES_USER: "admin"
+  POSTGRES_PASSWORD: "adminpassword"
+  POSTGRES_DB: "maildatabase"
