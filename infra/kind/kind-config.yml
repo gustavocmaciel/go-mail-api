@@ -1,0 +1,19 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: go-mail-api-app-cluster
+
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+  # Expose go-mail-api-service on http://localhost:8080,
+  # mapping container port 30000 to host port 8080.
+  extraPortMappings:
+  - containerPort: 30000
+    hostPort: 8080
+    listenAddress: "0.0.0.0"
+    protocol: TCP
+
+networking:
+  apiServerAddress: "127.0.0.1"
+  apiServerPort: 6443

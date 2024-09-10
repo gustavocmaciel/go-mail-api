@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: postgres-namespace
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres-mail-db:latest # dev
+        imagePullPolicy: Never # dev
+        envFrom:
+        - configMapRef:
+            name: postgres-configuration
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-headless
+  namespace: postgres-namespace
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432    # The port on the container the Service forwards to
+    name: postgres
+  clusterIP: None
