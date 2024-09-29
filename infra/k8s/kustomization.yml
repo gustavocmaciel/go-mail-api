@@ -6,5 +6,5 @@ resources:
 
 images:
 - name: go-mail-api-app-image
-  newName: user/app
-  newTag: newTag
+  newName: /go-mail-api-app
+  newTag: fa3eb1e1a7f24d810cec0c12d1d1200761877860
