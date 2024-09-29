@@ -25,6 +25,7 @@ spec:
       containers:
       - name: go-mail-api
         image: go-mail-api-app-image
+
 #        image:  go-mail-api-app:latest # dev
 #        imagePullPolicy: Never # dev
         envFrom:
