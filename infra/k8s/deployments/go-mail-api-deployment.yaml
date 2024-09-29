@@ -24,8 +24,9 @@ spec:
           do echo waiting for database; sleep 2; done;']
       containers:
       - name: go-mail-api
-        image:  go-mail-api-app:latest # dev
-        imagePullPolicy: Never # dev
+        image: go-mail-api-app-image
+#        image:  go-mail-api-app:latest # dev
+#        imagePullPolicy: Never # dev
         envFrom:
         - configMapRef:
             name: postgres-configuration
